@@ -24,14 +24,15 @@ var detailVis = d3.select('#detailVis').append('svg')
 var svg = d3.select('#vis').append('svg')
   .attr('width', width + margin.left + margin.right)
   .attr('height', height + margin.top + margin.bottom)
+  .on('click', clicked)
 
 //svg
-//  .append('rect')
-//  .attr('class', 'background')
-//  .attr('width', width)
-//  .attr('height', height)
-//  .style('fill', 'none')
-//  .on('clicked', click);
+  //.append('rect')
+  //.attr('class', 'background')
+  //.attr('width', width)
+  //.attr('height', height)
+  //.style('fill', 'none')
+  //.on('clicked', clicked);
 
 var g = svg.append('g')
   .attr('class', 'country')
@@ -65,24 +66,25 @@ d3.json('../data/us-named.json', function(error, data) {
       .on('click', clicked)
 
   // needed? 
-  g
-    .append('path')
-    .datum(topojson.mesh(data, data.objects.states, function(a, b) {
-      return a !== b;
-    }));
+//  g
+//    .append('path')
+//    .datum(topojson.mesh(data, data.objects.states, function(a, b) {
+//      return a !== b;
+//    }));
   
   //loadStats();
 
 }); // end d3.json -- us-named
 
 function clicked(d) {
+  console.log(this);
   console.log(d);
   console.log(d.properties.name);
   console.log(d3.geo.centroid(d));
   var x, y, k;
   
   if (d && centered !== d) {
-    var centroid = d3.geo.centroid(d);
+    var centroid = path.centroid(d);
     x = centroid[0];
     y = centroid[1];
     k = 4;
@@ -94,6 +96,7 @@ function clicked(d) {
     centered = null;
   }
 
+  console.log(x, y);
   g
     .selectAll('path')
     .classed('active', centered && function(d) {
@@ -103,9 +106,10 @@ function clicked(d) {
   g
     .transition()
     .duration(750)
-    .attr('transform', 'translate(' + width / 2 + ','
-      + height / 2 + ')scale(' + k + ')translate('
-      + -x + ',' + -y + ')');
+    .attr('transform', 'translate(' + (width / 2) + ','
+      + (height / 2) + ')scale(' + k + ')translate('
+      + -x + ',' + -y + ')')
+    .style('stroke-width', 1.5 / k + 'px')
 
 //  svg
 //    .select('.country')
