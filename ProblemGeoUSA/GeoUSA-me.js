@@ -24,7 +24,7 @@ var detailVis = d3.select('#detailVis').append('svg')
 var svg = d3.select('#vis').append('svg')
   .attr('width', width + margin.left + margin.right)
   .attr('height', height + margin.top + margin.bottom)
-  .on('click', clicked)
+  //.on('click', clicked)
 
 //svg
   //.append('rect')
@@ -72,15 +72,13 @@ d3.json('../data/us-named.json', function(error, data) {
 //      return a !== b;
 //    }));
   
-  //loadStats();
+  //loadStations();
+  loadStats();
 
 }); // end d3.json -- us-named
 
+
 function clicked(d) {
-  console.log(this);
-  console.log(d);
-  console.log(d.properties.name);
-  console.log(d3.geo.centroid(d));
   var x, y, k;
   
   if (d && centered !== d) {
@@ -96,7 +94,7 @@ function clicked(d) {
     centered = null;
   }
 
-  console.log(x, y);
+  //console.log(x, y);
   g
     .selectAll('path')
     .classed('active', centered && function(d) {
@@ -124,9 +122,46 @@ function clicked(d) {
 }
 
 function loadStations() {
-  d3.csv('../data/NSRCB_StationsMeta.csv', function(error, data) {
+  d3.csv('../data/NSRDB_StationsMeta.csv', function(error, data) {
 
-    // ..
+  // get rid of Guam, Puerto Rico, Virgin Islands
+  //data = data.filter(function(d) {
+    //var st = d['ST'];
+    //return st !== 'GU' && st !== 'PR' && st !== 'VI'; 
+  //})
+
+
+  g
+    .selectAll('.station')
+    .data(data)
+    .enter()
+      .append('circle')
+      .attr('class', 'station')
+      .attr('cx', function(d) {
+        var x = projection(
+          [
+            parseFloat(d['NSRDB_LON(dd)']),
+            parseFloat(d['NSRDB_LAT (dd)'])
+          ]
+        );
+        if (x) return x[0];
+      })
+      .attr('cy', function(d) {
+        var y = projection(
+          [
+            parseFloat(d['NSRDB_LON(dd)']),
+            parseFloat(d['NSRDB_LAT (dd)'])
+          ]
+        );
+        if (y) return y[1];
+        //return projection(
+          //[
+            //parseFloat(d['NSRDB_LON(dd)']),
+            //parseFloat(d['NSRDB_LAT (dd)'])
+          //]
+        //)[1];
+      })
+      .attr('r', 3)
 
   }); // end d3.csv() -- stationsmeta
 } // end loadStations()
