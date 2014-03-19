@@ -33,4 +33,14 @@ d3.json('../data/allData2003_2004.json', function(error, data) {
 
   }; // end for()
 
+  saveToFile(stations, 'reduceMonthStationHour2003_2004.json');
 }); // end d3.json() -- alldata
+
+var saveToFile = function(object, filename){
+    var blob, blobText;
+    blobText = [JSON.stringify(object)];
+    blob = new Blob(blobText, {
+        type: "text/plain;charset=utf-8"
+    });
+    saveAs(blob, filename);
+}

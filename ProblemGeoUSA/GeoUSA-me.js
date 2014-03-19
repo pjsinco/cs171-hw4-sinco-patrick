@@ -39,20 +39,7 @@ var path = d3.geo.path()
   .projection(projection)
 
 var dataset = [];
-var completeDataSet = [];
-
-d3.json('../data/allData2003_2004.json', function(error, data) {
-
-    var stations = d3.keys(data)
-    
-    for (var station in data) {
-      //console.log(data[station][0]);
-      data[station].forEach(function(d) {
-        console.log(parseDate(d.date), d.value);
-      });
-    }
-
-}); // end d3.json() -- alldata
+var completeDataset = [];
 
 d3.json('../data/us-named.json', function(error, data) {
 
@@ -76,7 +63,6 @@ d3.json('../data/us-named.json', function(error, data) {
 //    }));
   
   loadStats();
-
 }); // end d3.json -- us-named
 
 
@@ -116,6 +102,8 @@ function clicked(d) {
 function loadStations() {
   d3.csv('../data/NSRDB_StationsMeta.csv', function(error, data) {
 
+  console.log(completeDataset);
+
   g
     .selectAll('.station')
     .data(data)
@@ -129,7 +117,7 @@ function loadStations() {
             parseFloat(d['NSRDB_LAT (dd)'])
           ]
         );
-        // make sure we have a value before returning it
+        // make sure we have an array before returning part of it
         if (x) return x[0]; 
       })
       .attr('cy', function(d) {
@@ -139,7 +127,7 @@ function loadStations() {
             parseFloat(d['NSRDB_LAT (dd)'])
           ]
         );
-        // make sure we have a value before returning it
+        // make sure we have an array before returning part of it
         if (y) return y[1];
       })
       .attr('r', 3)
