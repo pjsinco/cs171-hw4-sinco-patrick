@@ -26,14 +26,6 @@ var svg = d3.select('#vis').append('svg')
   .attr('height', height + margin.top + margin.bottom)
   //.on('click', clicked)
 
-//svg
-  //.append('rect')
-  //.attr('class', 'background')
-  //.attr('width', width)
-  //.attr('height', height)
-  //.style('fill', 'none')
-  //.on('clicked', clicked);
-
 var g = svg.append('g')
   .attr('class', 'country')
   .attr('transform', 'translate(' + margin.left + ','
@@ -49,12 +41,23 @@ var path = d3.geo.path()
 var dataset = [];
 var completeDataSet = [];
 
+d3.json('../data/allData2003_2004.json', function(error, data) {
+
+    var stations = d3.keys(data)
+    
+    for (var station in data) {
+      //console.log(data[station][0]);
+      data[station].forEach(function(d) {
+        console.log(parseDate(d.date), d.value);
+      });
+    }
+
+}); // end d3.json() -- alldata
+
 d3.json('../data/us-named.json', function(error, data) {
-  //console.log(data);
 
   // convert topojson to geojson
   var usMap = topojson.feature(data, data.objects.states);
-  //console.log(usMap);
 
   g
     .selectAll('.state')
@@ -72,7 +75,6 @@ d3.json('../data/us-named.json', function(error, data) {
 //      return a !== b;
 //    }));
   
-  //loadStations();
   loadStats();
 
 }); // end d3.json -- us-named
@@ -109,27 +111,10 @@ function clicked(d) {
       + -x + ',' + -y + ')')
     .style('stroke-width', 1.5 / k + 'px')
 
-//  svg
-//    .select('.country')
-//    .append('circle')
-//    .attr('cx', function (d) {
-//      return path(d3.geo.centroid(d)[0]);
-//    })
-//    .attr('cy', function (d) {
-//      return path(d3.geo.centroid(d)[1]);
-//    })
-//    .style('fill', 'gold')
 }
 
 function loadStations() {
   d3.csv('../data/NSRDB_StationsMeta.csv', function(error, data) {
-
-  // get rid of Guam, Puerto Rico, Virgin Islands
-  //data = data.filter(function(d) {
-    //var st = d['ST'];
-    //return st !== 'GU' && st !== 'PR' && st !== 'VI'; 
-  //})
-
 
   g
     .selectAll('.station')
@@ -144,7 +129,8 @@ function loadStations() {
             parseFloat(d['NSRDB_LAT (dd)'])
           ]
         );
-        if (x) return x[0];
+        // make sure we have a value before returning it
+        if (x) return x[0]; 
       })
       .attr('cy', function(d) {
         var y = projection(
@@ -153,13 +139,8 @@ function loadStations() {
             parseFloat(d['NSRDB_LAT (dd)'])
           ]
         );
+        // make sure we have a value before returning it
         if (y) return y[1];
-        //return projection(
-          //[
-            //parseFloat(d['NSRDB_LON(dd)']),
-            //parseFloat(d['NSRDB_LAT (dd)'])
-          //]
-        //)[1];
       })
       .attr('r', 3)
 

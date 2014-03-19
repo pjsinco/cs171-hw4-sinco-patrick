@@ -1,43 +1,24 @@
 d3.json('../data/allData2003_2004.json', function(error, data) {
+  var timeParser = d3.time.format("%b %-d, %Y %X %p");
 
-  //console.log(d3.keys(data));
+  //var timeParser = d3.time.format("%b %-d, %Y %H:%-M:%S %p");
 
-  var keys = d3.keys(data);
-  var allDates = [];
-  //var timeParser = d3.time.format('%H:%M:%S %p');
-  var timeParser = d3.time.format("%b %-d, %Y %H:%-M:%S %p");
-  var stationData = [];
+  var stations = d3.keys(data)
   
-  // get all the dates in play
-  data[keys[0]].forEach(function(d) {
-    allDates.push(timeParser.parse(d.date));
-  });
+  // for each station ...
+  for (var station in data) {
+    var monthSum;
+    //console.log(data[station][0]);
+    // for each dataset in the station ...
+    data[station].forEach(function(d) {
+      console.log(timeParser.parse(d.date).getTime(), parseFloat(d.value));
+      //var month = timeParser.parse(d.date).getMonth();
+      //while (timeParser.parse(d.date).getMonth() === month) {
+        //monthSum += parseFloat(d.value);
+      //}
+      //monthSum[station][month] = monthSum;
+    });
+    //console.log(monthSum);
+  }
 
-  
-  
-  
-  
-  //console.log(allDates);
-  console.log(allDates[0].getMonth());
-  //console.log(allDates.length);
 }); // end d3.json() -- alldata
-
-//var ex = 
-//[
-//  '690150': 
-//  {
-//    'sum': 11916800,
-//    'hourly': 
-//     { 
-//        '01:00:00 AM': 0,
-//        '02:00:00 AM': 0, 
-//        '03:00:00 AM': 0,
-//        '04:00:00 AM': 0,
-//        '05:00:00 AM': 0,
-//        '06:00:00 AM': 2,
-//        '07:00:00 AM': 5,
-//     } 
-//  },
-//]
-
-  
