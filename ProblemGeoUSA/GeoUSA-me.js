@@ -101,8 +101,16 @@ function clicked(d) {
 
 function loadStations() {
   d3.csv('../data/NSRDB_StationsMeta.csv', function(error, data) {
+  //console.log(data);
 
-  console.log(completeDataset);
+// for calcuating a good radius
+//  var sums = [];
+//  for (var s in completeDataset) {
+//    sums.push(completeDataset[s].sum)
+//  }
+//  var max = d3.max(sums);
+//  var min = d3.min(sums);
+//  console.log(min, max);
 
   g
     .selectAll('.station')
@@ -130,7 +138,28 @@ function loadStations() {
         // make sure we have an array before returning part of it
         if (y) return y[1];
       })
-      .attr('r', 3)
+      .attr('r', function(d) {
+        var usaf = d['USAF'];
+        if (completeDataset[usaf]) {
+          return completeDataset[usaf].sum / 10000000;
+        } else {
+          return 2;
+        }
+      })
+      .style('fill', function(d) {
+        var usaf = d['USAF'];
+        if (!completeDataset[usaf]) {
+          return '#aaa';
+        }
+      })
+      .style('stroke', function(d) {
+        var usaf = d['USAF'];
+        if (!completeDataset[usaf]) {
+          return '#aaa';
+        }
+      })
+
+    //console.log(completeDataset['690150'].sum);
 
   }); // end d3.csv() -- stationsmeta
 } // end loadStations()
