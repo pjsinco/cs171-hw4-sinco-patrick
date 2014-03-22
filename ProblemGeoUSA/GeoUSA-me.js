@@ -3,46 +3,46 @@ var margin = {
   top: 50,
   left: 50,
   bottom: 50,
-  right: 50,
+  right: 150
 }
 
-var width = 960 - margin.left - margin.right; // 860
+var margin2 = {
+  top: 50,
+  left: 560,
+  bottom: 50,
+  right: 50
+}
+
+var width = 960 - margin.left - margin.right; // 760
+var width2 = 960 - margin2.left - margin2.right; // 250
 var height = 800 - margin.top - margin.bottom; // 700
+var height2 = 300 - margin2.top - margin2.bottom; // 200
+var padding = 30;
 var centered;
 
 var formatVal = d3.format('s');
 
-var bbVis = {
-  x: 100,
-  y: 10,
-  w: width - 100, h: 300
-}
-
-var detailVis = d3.select('#detailVis').append('svg')
-  .attr('width', 350)
-  .attr('height', 200)
-
-var xScaleDetail = d3.time.scale()
+var xScale = d3.time.scale()
   .domain([new Date, new Date])
   .nice(d3.time.hour, 23)
-  .range([30, parseInt(detailVis.attr('width')) - 20]);
+  .range([padding, width2 - padding]);
 
-var yScaleDetail = d3.scale.linear()
-  .range([parseInt(detailVis.attr('height')), 0]);
+var yScale = d3.scale.linear()
+  .range([height2 - padding, padding]);
 
-var xAxisDetail = d3.svg.axis()
-  .scale(xScaleDetail)
+var xAxis = d3.svg.axis()
+  .scale(xScale)
   .tickFormat(d3.time.format('%H:%M'))
   .ticks(20)
   .orient('bottom');
 
-var yAxisDetail = d3.svg.axis()
-  .scale(yScaleDetail)
+var yAxis = d3.svg.axis()
+  .scale(yScale)
   .orient('right')
   .tickFormat(d3.format('s'));
   
-
-var svg = d3.select('#vis').append('svg')
+var svg = d3.select('body').append('svg')
+  .attr('class', 'context')
   .attr('width', width + margin.left + margin.right)
   .attr('height', height + margin.top + margin.bottom)
   //.on('click', clicked)
@@ -52,6 +52,11 @@ var g = svg.append('g')
   .attr('transform', 'translate(' + margin.left + ','
     + margin.right + ')')
   
+var focus = d3.select('body').append('svg')
+  .attr('class', 'focus')
+  .attr('width', width2 + margin2.left + margin2.right)
+  .attr('height', height + margin2.top + margin2.bottom)
+
 var projection = d3.geo.albersUsa()
   .translate([width / 2, height / 2])
   .precision(0.1)
@@ -136,7 +141,7 @@ function stateClicked(d) {
       + -x + ',' + -y + ')')
     .style('stroke-width', 1.5 / k + 'px')
 } // end stateClicked()
-
+//
 function loadStations() {
   d3.csv('../data/NSRDB_StationsMeta.csv', function(error, data) {
   //console.log(data);
@@ -207,16 +212,16 @@ function loadStations() {
 
   }); // end d3.csv() -- stationsmeta
 
-  // format xAxis
-  detailVis
+  // place the xAxis
+  focus
     .append('g')
     .attr('class', 'x axis')
-    .attr('transform', 'translate(-20,' + 
-      parseInt(detailVis.attr('height') - 40) + ')')
-    .call(xAxisDetail)
+    .attr('transform', 'translate(' + padding + ','
+      + height2 + ')')
+    .call(xAxis)
   
   // format xAxis text
-  detailVis
+  focus
     .selectAll('.x.axis text')
     .attr('transform', 'rotate(-75)')
     .attr('text-anchor', 'end')
@@ -224,18 +229,17 @@ function loadStations() {
     .attr('x', -23)
   
   // format yAxis
-  yScaleDetail
-    //.domain([0, maxSum(completeDataset)])
-    .domain([0, 8000000])
+  yScale
+    .domain([0, maxSum(completeDataset)])
+    //.domain([0, 8000000])
 
-  //console.log(parseInt(detailVis.attr('width')));
-  detailVis
+  // place the y axis
+  focus
     .append('g')
     .attr('class', 'y axis')
-    .attr('transform', 'translate(' + 
-      //parseInt(detailVis.attr('width')) + ',-40)')
-      '320,-60)')
-    .call(yAxisDetail)
+    .attr('transform', 'translate(' + (width2 + padding) + ','
+      + padding + ')')
+    .call(yAxis)
 
 } // end loadStations()
 
@@ -259,18 +263,18 @@ function stationClicked(d) {
       .attr('class', 'bar')
       .attr('x', function(e, i) {
         var date = new Date;
-        return xScaleDetail(date.setHours(i));
+        return xScale(date.setHours(i));
       })
       .attr('y', function(e) {
         return 100;
-        return yScaleDetail(e);
+        return yScale(e);
       })
       .attr('width', 10)
       .attr('height', function(e) {
         console.log(parseInt(detailVis.attr('height')));
-        console.log(yScaleDetail(e));
+        console.log(yScale(e));
         return parseInt(detailVis.attr('height')) 
-          - yScaleDetail(e);
+          - yScale(e);
       })
       .style('fill', 'darkorange')
   
