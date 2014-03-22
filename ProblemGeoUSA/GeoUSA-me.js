@@ -13,8 +13,7 @@ var centered;
 var bbVis = {
   x: 100,
   y: 10,
-  w: width - 100,
-  h: 300
+  w: width - 100, h: 300
 }
 
 var detailVis = d3.select('#detailVis').append('svg')
@@ -42,15 +41,15 @@ var path = d3.geo.path()
 var dataset = [];
 var completeDataset = [];
 
-//var tip = d3.tip()
-//  //.attr('class', 'd3-tip')
-//  .attr('class', function(d) {
-//  })
-//  .offset([-10, 0])
-//  .html(function(d) {
-//    console.log(d['properties']['name']);
-//    //return '<strong>' + d + '</strong>';
-//  });
+var tip = d3.tip()
+  .attr('class', 'd3-tip')
+  .offset([-10, 0])
+  .html(function(d) {
+    return '<strong>' + d['STATION'] + '</strong>';
+  });
+
+svg
+  .call(tip);
 
 d3.json('../data/us-named.json', function(error, data) {
 
@@ -172,8 +171,8 @@ function loadStations() {
           return '#aaa';
         }
       })
-      //.on('mouseover', tip.show)
-      //.on('mouseout', tip.hide)
+      .on('mouseover', tip.show)
+      .on('mouseout', tip.hide)
 
     //console.log(completeDataset['690150'].sum);
 
