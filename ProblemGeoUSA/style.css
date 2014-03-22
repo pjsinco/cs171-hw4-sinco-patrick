@@ -1,0 +1,83 @@
+svg {
+  /*background: #eeeeee;*/
+}
+
+svg .country {
+  fill: #0b2874;
+  stroke: #f444;
+}
+
+svg text {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 9pt;
+  /*font-weight: lighter;*/
+}
+
+svg .axis text {
+  font: 10px sans-serif;
+}
+
+svg .axis line, svg .axis path {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+svg .station {
+  fill: gold;
+  opacity: .7;
+  stroke: darkorange
+}
+
+svg .station.hasData {
+  fill: blue;
+  opacity: 1;
+}
+
+svg .hourLine {
+  fill: none;
+  stroke: steelblue;
+
+}
+
+svg .active {
+  fill: #5a80e3;
+}
+
+svg .brush .extent {
+  fill: gray;
+  opacity: .3;
+}
+
+.d3-tip {
+  font-family: sans-serif;
+  font-weight: 100;
+  color: #888;
+  box-sizing: border-box;
+  display: inline;
+  background-color: #ededed;
+  opacity: 0.8;
+  border-radius: 2px;
+  padding: 12px;
+}
+
+/*create a small triangle extender for the tooltip*/
+.d3-tip:after {
+  box-sizing: border-box;
+  display: inline;
+  font-size: 10px;
+  width: 100%;
+  line-height: 1;
+  color: #ededed;
+  opacity: 0.8;
+  content: '\25bc';
+  position: absolute;
+  text-align: center;
+}
+
+/* style north tips differently */
+.d3-tip.n:after {
+  margin: -1px 0 0 0;
+  top: 100%;
+  left: 0;
+}

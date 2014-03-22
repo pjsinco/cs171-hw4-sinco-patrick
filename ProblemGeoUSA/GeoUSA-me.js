@@ -10,6 +10,8 @@ var width = 1060 - margin.left - margin.right; // 960
 var height = 800 - margin.top - margin.bottom; // 700
 var centered;
 
+var formatVal = d3.format('s');
+
 var bbVis = {
   x: 100,
   y: 10,
@@ -45,7 +47,13 @@ var tip = d3.tip()
   .attr('class', 'd3-tip')
   .offset([-10, 0])
   .html(function(d) {
-    return '<strong>' + d['STATION'] + '</strong>';
+    var station = d['USAF'];
+    var sum = completeDataset[station] !== undefined ?
+      completeDataset[d['USAF']]['sum'] : 'No data';
+    //return '<span>' + d['STATION'] + '</span><br>'
+    return '<span>' + d['STATION'] + '</span><br>'
+      + '<span style=\'color: black;\'>' 
+      + (isNaN(sum) ? sum : formatVal(sum)) + '</span>';
   });
 
 svg
@@ -171,7 +179,9 @@ function loadStations() {
           return '#aaa';
         }
       })
-      .on('mouseover', tip.show)
+      .on('mouseover', function(d) {
+          tip.show(d)
+      })
       .on('mouseout', tip.hide)
 
     //console.log(completeDataset['690150'].sum);
