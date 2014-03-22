@@ -25,13 +25,10 @@ var detailVis = d3.select('#detailVis').append('svg')
 var xScaleDetail = d3.time.scale()
   .domain([new Date, new Date])
   .nice(d3.time.hour, 23)
-  .range([20, parseInt(detailVis.attr('width')) - 20]);
-
-//console.log(xScaleDetail.domain());
-//console.log(xScaleDetail.range());
+  .range([30, parseInt(detailVis.attr('width')) - 20]);
 
 var yScaleDetail = d3.scale.linear()
-  .range([detailVis.attr('height'), 0]);
+  .range([parseInt(detailVis.attr('height')) + 20, 0]);
 
 var xAxisDetail = d3.svg.axis()
   .scale(xScaleDetail)
@@ -41,21 +38,9 @@ var xAxisDetail = d3.svg.axis()
 
 var yAxisDetail = d3.svg.axis()
   .scale(yScaleDetail)
-  .orient('top');
+  .orient('right')
+  .tickFormat(d3.format('s'));
   
-detailVis
-  .append('g')
-  .attr('class', 'x axis')
-  //.attr('transform', 'translate(0,' + 
-    //detailVis.attr('height') + ')')
-  .call(xAxisDetail)
-
-detailVis
-  .selectAll('text')
-  .attr('transform', 'rotate(-75)')
-  .attr('text-anchor', 'end')
-  .attr('y', -0)
-  .attr('x', -23)
 
 var svg = d3.select('#vis').append('svg')
   .attr('width', width + margin.left + margin.right)
@@ -221,7 +206,45 @@ function loadStations() {
     //console.log(completeDataset['690150'].sum);
 
   }); // end d3.csv() -- stationsmeta
+
+  // format xAxis
+  detailVis
+    .append('g')
+    .attr('class', 'x axis')
+    .attr('transform', 'translate(-20,' + 
+      parseInt(detailVis.attr('height') - 40) + ')')
+    .call(xAxisDetail)
+  
+  // format xAxis text
+  detailVis
+    .selectAll('.x.axis text')
+    .attr('transform', 'rotate(-75)')
+    .attr('text-anchor', 'end')
+    .attr('y', -0)
+    .attr('x', -23)
+  
+  // format yAxis
+  yScaleDetail
+    .domain([0, maxSum(completeDataset)])
+
+  console.log(parseInt(detailVis.attr('width')));
+  detailVis
+    .append('g')
+    .attr('class', 'y axis')
+    .attr('transform', 'translate(' + 
+      //parseInt(detailVis.attr('width')) + ',-40)')
+      '320,-60)')
+    .call(yAxisDetail)
+
 } // end loadStations()
+
+function maxSum(data) {
+  var sums = [];
+  for (var s in data) {
+    sums.push(data[s].sum);
+  }
+  return d3.max(sums);
+}
 
 function stationClicked(d) {
   d3.select('#detailVis svg')
@@ -241,7 +264,7 @@ function loadStats() {
 
   }); // end d3.json()
 } // end loadStats()
-  
+
 function zoomIn(d) {
   console.log(d.properties.name);
 }
