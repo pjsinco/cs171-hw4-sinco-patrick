@@ -6,7 +6,7 @@ var margin = {
   right: 50,
 }
 
-var width = 1060 - margin.left - margin.right; // 960
+var width = 960 - margin.left - margin.right; // 860
 var height = 800 - margin.top - margin.bottom; // 700
 var centered;
 
@@ -22,6 +22,32 @@ var detailVis = d3.select('#detailVis').append('svg')
   .attr('width', 350)
   .attr('height', 200)
 
+var xScaleDetail = d3.time.scale()
+  .domain([new Date, new Date])
+  .nice(d3.time.hour, 24)
+  .range([0, parseInt(detailVis.attr('width'))]);
+
+//console.log(xScaleDetail.domain());
+//console.log(xScaleDetail.range());
+
+var yScaleDetail = d3.scale.linear()
+  .range([detailVis.attr('height'), 0]);
+
+var xAxisDetail = d3.svg.axis()
+  .scale(xScaleDetail)
+  .ticks(24)
+  .orient('bottom');
+
+var yAxisDetail = d3.svg.axis()
+  .scale(yScaleDetail)
+  .orient('top');
+  
+detailVis
+  .append('g')
+  .attr('class', 'x axis')
+  //.attr('transform', 'translate(0,' + 
+    //detailVis.attr('height') + ')')
+  .call(xAxisDetail)
 
 var svg = d3.select('#vis').append('svg')
   .attr('width', width + margin.left + margin.right)
@@ -43,6 +69,9 @@ var path = d3.geo.path()
 var dataset = [];
 var completeDataset = [];
 
+/*
+ * Inititialize our tooltip
+ */
 var tip = d3.tip()
   .attr('class', 'd3-tip')
   .offset([-10, 0])
@@ -56,9 +85,15 @@ var tip = d3.tip()
       + (isNaN(sum) ? sum : formatVal(sum)) + '</span>';
   });
 
+/*
+ * Activate our tooltip
+ */
 svg
   .call(tip);
 
+/*
+ * Load US map
+ */
 d3.json('../data/us-named.json', function(error, data) {
 
   // convert topojson to geojson
@@ -71,22 +106,13 @@ d3.json('../data/us-named.json', function(error, data) {
       .append('path')
       .attr('class', 'state')
       .attr('d', path)
-      .on('click', clicked)
-      //.on('mouseover', tip.show)
-      //.on('mouseout', tip.hide)
-
-  // needed? 
-//  g
-//    .append('path')
-//    .datum(topojson.mesh(data, data.objects.states, function(a, b) {
-//      return a !== b;
-//    }));
+      .on('click', stateClicked)
   
   loadStats();
 }); // end d3.json -- us-named
 
 
-function clicked(d) {
+function stateClicked(d) {
   var x, y, k;
   
   if (d && centered !== d) {
@@ -116,8 +142,7 @@ function clicked(d) {
       + (height / 2) + ')scale(' + k + ')translate('
       + -x + ',' + -y + ')')
     .style('stroke-width', 1.5 / k + 'px')
-
-}
+} // end stateClicked()
 
 function loadStations() {
   d3.csv('../data/NSRDB_StationsMeta.csv', function(error, data) {
@@ -180,14 +205,23 @@ function loadStations() {
         }
       })
       .on('mouseover', function(d) {
-          tip.show(d)
+          tip.show(d) // just experimenting with function calls
       })
       .on('mouseout', tip.hide)
+      .on('click', stationClicked)
 
     //console.log(completeDataset['690150'].sum);
 
   }); // end d3.csv() -- stationsmeta
 } // end loadStations()
+
+function stationClicked(d) {
+  d3.select('#detailVis svg')
+    .attr('class', function() {
+      console.log(d3.select(this));
+    })
+  //console.log(d);
+} // end stationClicked()
     
 function loadStats() {
   d3.json('../data/reduceMonthStationHour2003_2004.json',
