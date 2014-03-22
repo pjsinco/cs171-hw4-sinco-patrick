@@ -248,9 +248,31 @@ function maxSum(data) {
 
 function stationClicked(d) {
   d3.select('#detailVis svg')
-    .attr('class', function() {
-      console.log(d3.select(this));
+    .selectAll('.bar')
+    .data(function() {
+      var s = d['USAF'];
+      return completeDataset[s]['hourly'];
     })
+    .enter()
+      .append('rect')
+      .attr('class', 'bar')
+      .attr('x', function(e, i) {
+        var date = new Date;
+        return xScaleDetail(date.setHours(i));
+      })
+      .attr('y', function(e) {
+        return yScaleDetail(e);
+      })
+      .attr('width', 10)
+      .attr('height', function(e) {
+        //yScaleDetail(e)
+        return parseInt(detailVis.attr('height')) 
+          - yScaleDetail(e);
+      })
+      .style('fill', 'darkorange')
+  
+    
+    
   //console.log(d);
 } // end stationClicked()
     
