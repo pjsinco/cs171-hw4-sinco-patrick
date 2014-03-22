@@ -42,15 +42,15 @@ var path = d3.geo.path()
 var dataset = [];
 var completeDataset = [];
 
-var tip = d3.tip()
-  //.attr('class', 'd3-tip')
-  .attr('class', function(d) {
-  })
-  .offset([-10, 0])
-  .html(function(d) {
-    console.log(d['properties']['name']);
-    //return '<strong>' + d + '</strong>';
-  });
+//var tip = d3.tip()
+//  //.attr('class', 'd3-tip')
+//  .attr('class', function(d) {
+//  })
+//  .offset([-10, 0])
+//  .html(function(d) {
+//    console.log(d['properties']['name']);
+//    //return '<strong>' + d + '</strong>';
+//  });
 
 d3.json('../data/us-named.json', function(error, data) {
 
@@ -64,9 +64,9 @@ d3.json('../data/us-named.json', function(error, data) {
       .append('path')
       .attr('class', 'state')
       .attr('d', path)
-      //.on('click', clicked)
-      .on('mouseover', tip.show)
-      .on('mouseout', tip.hide)
+      .on('click', clicked)
+      //.on('mouseover', tip.show)
+      //.on('mouseout', tip.hide)
 
   // needed? 
 //  g
