@@ -225,7 +225,8 @@ function loadStations() {
   
   // format yAxis
   yScaleDetail
-    .domain([0, maxSum(completeDataset)])
+    //.domain([0, maxSum(completeDataset)])
+    .domain([0, 8000000])
 
   //console.log(parseInt(detailVis.attr('width')));
   detailVis
