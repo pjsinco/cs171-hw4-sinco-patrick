@@ -170,8 +170,6 @@ function loadStats() {
 
     completeDataset = data;
     
-    // ..
-    
     loadStations();
 
   }); // end d3.json()
