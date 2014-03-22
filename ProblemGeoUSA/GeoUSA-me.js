@@ -21,6 +21,7 @@ var detailVis = d3.select('#detailVis').append('svg')
   .attr('width', 350)
   .attr('height', 200)
 
+
 var svg = d3.select('#vis').append('svg')
   .attr('width', width + margin.left + margin.right)
   .attr('height', height + margin.top + margin.bottom)
@@ -41,6 +42,16 @@ var path = d3.geo.path()
 var dataset = [];
 var completeDataset = [];
 
+var tip = d3.tip()
+  //.attr('class', 'd3-tip')
+  .attr('class', function(d) {
+  })
+  .offset([-10, 0])
+  .html(function(d) {
+    console.log(d['properties']['name']);
+    //return '<strong>' + d + '</strong>';
+  });
+
 d3.json('../data/us-named.json', function(error, data) {
 
   // convert topojson to geojson
@@ -53,7 +64,9 @@ d3.json('../data/us-named.json', function(error, data) {
       .append('path')
       .attr('class', 'state')
       .attr('d', path)
-      .on('click', clicked)
+      //.on('click', clicked)
+      .on('mouseover', tip.show)
+      .on('mouseout', tip.hide)
 
   // needed? 
 //  g
@@ -102,6 +115,7 @@ function clicked(d) {
 function loadStations() {
   d3.csv('../data/NSRDB_StationsMeta.csv', function(error, data) {
   //console.log(data);
+
 
 // for calcuating a good radius
 //  var sums = [];
@@ -158,6 +172,8 @@ function loadStations() {
           return '#aaa';
         }
       })
+      //.on('mouseover', tip.show)
+      //.on('mouseout', tip.hide)
 
     //console.log(completeDataset['690150'].sum);
 
