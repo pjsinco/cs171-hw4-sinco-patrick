@@ -28,7 +28,7 @@ var xScaleDetail = d3.time.scale()
   .range([30, parseInt(detailVis.attr('width')) - 20]);
 
 var yScaleDetail = d3.scale.linear()
-  .range([parseInt(detailVis.attr('height')) + 20, 0]);
+  .range([parseInt(detailVis.attr('height')), 0]);
 
 var xAxisDetail = d3.svg.axis()
   .scale(xScaleDetail)
@@ -227,7 +227,7 @@ function loadStations() {
   yScaleDetail
     .domain([0, maxSum(completeDataset)])
 
-  console.log(parseInt(detailVis.attr('width')));
+  //console.log(parseInt(detailVis.attr('width')));
   detailVis
     .append('g')
     .attr('class', 'y axis')
@@ -261,11 +261,13 @@ function stationClicked(d) {
         return xScaleDetail(date.setHours(i));
       })
       .attr('y', function(e) {
+        return 100;
         return yScaleDetail(e);
       })
       .attr('width', 10)
       .attr('height', function(e) {
-        //yScaleDetail(e)
+        console.log(parseInt(detailVis.attr('height')));
+        console.log(yScaleDetail(e));
         return parseInt(detailVis.attr('height')) 
           - yScaleDetail(e);
       })
