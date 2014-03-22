@@ -24,8 +24,8 @@ var detailVis = d3.select('#detailVis').append('svg')
 
 var xScaleDetail = d3.time.scale()
   .domain([new Date, new Date])
-  .nice(d3.time.hour, 24)
-  .range([0, parseInt(detailVis.attr('width'))]);
+  .nice(d3.time.hour, 23)
+  .range([20, parseInt(detailVis.attr('width')) - 20]);
 
 //console.log(xScaleDetail.domain());
 //console.log(xScaleDetail.range());
@@ -35,7 +35,8 @@ var yScaleDetail = d3.scale.linear()
 
 var xAxisDetail = d3.svg.axis()
   .scale(xScaleDetail)
-  .ticks(24)
+  .tickFormat(d3.time.format('%H:%M'))
+  .ticks(20)
   .orient('bottom');
 
 var yAxisDetail = d3.svg.axis()
@@ -48,6 +49,13 @@ detailVis
   //.attr('transform', 'translate(0,' + 
     //detailVis.attr('height') + ')')
   .call(xAxisDetail)
+
+detailVis
+  .selectAll('text')
+  .attr('transform', 'rotate(-75)')
+  .attr('text-anchor', 'end')
+  .attr('y', -0)
+  .attr('x', -23)
 
 var svg = d3.select('#vis').append('svg')
   .attr('width', width + margin.left + margin.right)
