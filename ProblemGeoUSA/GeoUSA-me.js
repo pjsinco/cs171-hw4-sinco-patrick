@@ -3,7 +3,7 @@ var margin = {
   top: 50,
   left: 50,
   bottom: 50,
-  right: 200
+  right: 50
 }
 
 var margin2 = {
@@ -13,7 +13,7 @@ var margin2 = {
   right: 50
 }
 
-var width = 960 - margin.left - margin.right; // 710
+var width = 770 - margin.left - margin.right; // 710
 var width2 = 960 - margin2.left - margin2.right; // 250
 var height = 500 - margin.top - margin.bottom; // 700
 var height2 = 300 - margin2.top - margin2.bottom; // 200
@@ -239,7 +239,7 @@ function loadStations() {
   focus
     .append('g')
     .attr('class', 'y axis')
-    .attr('transform', 'translate(' + (width2 + padding) + ','
+    .attr('transform', 'translate(' + (width2 + (padding / 2)) + ','
       + padding + ')')
     .call(yAxis)
 
@@ -254,6 +254,9 @@ function maxSum(data) {
 }
 
 function stationClicked(d) {
+  d3.selectAll('.bar')
+      .remove();
+
   d3.select('.focus')
     .selectAll('.bar')
     .data(function() {
@@ -265,19 +268,19 @@ function stationClicked(d) {
       .attr('class', 'bar')
       .attr('x', function(e, i) {
         var date = new Date;
-        return xScale(date.setHours(i)) + (padding / 2);
+        return xScale(date.setHours(i)) + 20;
       })
       .attr('y', function(e) {
-        return yScale(e);
+        return yScale(e) + padding;
       })
       .attr('width', 7)
       .attr('height', function(e) {
         console.log(e, height - yScale(e));
         //return height - yScale(e);
-        return height - yScale(e);
+        return height2 - yScale(e);
       })
       .style('fill', 'gold')
-      .style('opacity', 0.5)
+      //.style('opacity', 0.5)
   
     
     

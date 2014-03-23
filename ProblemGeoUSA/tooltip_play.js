@@ -97,6 +97,7 @@ d3.csv('data.csv', function(error, data) {
       }) 
       .attr('width', xScale.rangeBand())
       .attr('height', function(d) {
+        console.log();
         return height - yScale(d.frequency);
       }) 
       .style('fill', 'darkorange')
