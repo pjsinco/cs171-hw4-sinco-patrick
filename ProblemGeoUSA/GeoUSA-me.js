@@ -47,7 +47,6 @@ var svg = d3.select('#vis').append('svg')
   //.attr('width', width + margin.left + margin.right)
   .attr('width', width + margin.left + margin.right)
   .attr('height', height + margin.top + margin.bottom)
-  //.on('click', clicked)
 
 var g = svg.append('g')
   .attr('class', 'country')
@@ -128,7 +127,6 @@ function stateClicked(d) {
     centered = null;
   }
 
-  //console.log(x, y);
   g
     .selectAll('path')
     .classed('active', centered && function(d) {
@@ -141,13 +139,11 @@ function stateClicked(d) {
     .attr('transform', 'translate(' + (width / 2) + ','
       + (height / 2) + ')scale(' + k + ')translate('
       + -x + ',' + -y + ')')
-    .style('stroke-width', 1.5 / k + 'px')
+    .style('stroke-width', 1.5 / k + 'px');
 } // end stateClicked()
-//
+
 function loadStations() {
   d3.csv('../data/NSRDB_StationsMeta.csv', function(error, data) {
-  //console.log(data);
-
 
 // for calcuating a good radius
 //  var sums = [];
@@ -210,8 +206,6 @@ function loadStations() {
       .on('mouseout', tip.hide)
       .on('click', stationClicked)
 
-    //console.log(completeDataset['690150'].sum);
-
   }); // end d3.csv() -- stationsmeta
 
   // place the xAxis
@@ -220,7 +214,7 @@ function loadStations() {
     .attr('class', 'x axis')
     .attr('transform', 'translate(' + padding + ','
       + (height2 + padding) + ')')
-    .call(xAxis)
+    .call(xAxis);
   
   // format xAxis text
   focus
@@ -228,12 +222,12 @@ function loadStations() {
     .attr('transform', 'rotate(-75)')
     .attr('text-anchor', 'end')
     .attr('y', -0)
-    .attr('x', -23)
+    .attr('x', -23);
   
   // format yAxis
   yScale
     //.domain([0, maxSum(completeDataset)])
-    .domain([0, 20000000])
+    .domain([0, 20000000]);
 
   // place the y axis
   focus
@@ -241,7 +235,7 @@ function loadStations() {
     .attr('class', 'y axis')
     .attr('transform', 'translate(' + (width2 + (padding / 2)) + ','
       + padding + ')')
-    .call(yAxis)
+    .call(yAxis);
 
 } // end loadStations()
 
@@ -255,7 +249,7 @@ function maxSum(data) {
 
 function stationClicked(d) {
   d3.selectAll('.bar')
-      .remove();
+    .remove();
 
   d3.select('.focus')
     .selectAll('.bar')
@@ -279,18 +273,15 @@ function stationClicked(d) {
         //return height - yScale(e);
         return height2 - yScale(e);
       })
-      .style('fill', 'gold')
+      .style('fill', 'gold');
       //.style('opacity', 0.5)
-  
-    
-    
-  //console.log(d);
+
 } // end stationClicked()
     
 function loadStats() {
   d3.json('../data/reduceMonthStationHour2003_2004.json',
     function(error, data) {
-
+    
     completeDataset = data;
     
     loadStations();
