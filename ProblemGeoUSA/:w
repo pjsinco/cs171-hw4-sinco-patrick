@@ -122,8 +122,8 @@ function stateClicked(d) {
     k = 4;
     centered = d;
   } else {
-    x = (width / 2) - margin.left;
-    y = (height / 2) - margin.top;
+    x = width / 2;
+    y = height / 2;
     k = 1;
     centered = null;
   }
@@ -219,7 +219,7 @@ function loadStations() {
     .append('g')
     .attr('class', 'x axis')
     .attr('transform', 'translate(' + padding + ','
-      + (height2 + padding) + ')')
+      + height2 + ')')
     .call(xAxis)
   
   // format xAxis text
@@ -233,7 +233,7 @@ function loadStations() {
   // format yAxis
   yScale
     //.domain([0, maxSum(completeDataset)])
-    .domain([0, 20000000])
+    .domain([0, 8000000])
 
   // place the y axis
   focus
@@ -270,7 +270,7 @@ function stationClicked(d) {
       .attr('y', function(e) {
         return yScale(e);
       })
-      .attr('width', 7)
+      .attr('width', 10)
       .attr('height', function(e) {
         console.log(e, height - yScale(e));
         //return height - yScale(e);

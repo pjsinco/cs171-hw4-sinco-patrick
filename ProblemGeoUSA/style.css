@@ -1,3 +1,11 @@
+#vis {
+  width: 1200px;
+}
+.focus {
+  position: absolute;
+  left: 770px;
+}
+
 svg {
   /*background: #eeeeee;*/
 }
