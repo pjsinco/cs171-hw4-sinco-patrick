@@ -94,6 +94,7 @@ svg
  * Load US map
  */
 d3.json('../data/us-named.json', function(error, data) {
+  console.log(data);
 
   // convert topojson to geojson
   var usMap = topojson.feature(data, data.objects.states);
