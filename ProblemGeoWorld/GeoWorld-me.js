@@ -40,8 +40,25 @@ var color = d3.scale.quantize()
 
 d3.json('../data/world_topo.json', function(error, data) {
   data.objects.world_data.geometries.forEach(function(d) {
-    console.log(d.id); // grab the country id
+    //console.log(d.id); // grab the country id
   });
+
+  function getData(response) {
+    console.log(response);
+  }
+
+  $.ajax({
+    //url: 'http://api.worldbank.org/countries/br/indicators/NY.GDP.MKTP.CD?date=2006',
+    url: 'http://api.worldbank.org/countries?format=jsonP&prefix=Getdata&per_page=500&date=2006',
+      //'http://api.worldbank.org/countries/indicators/NY.GDP.MKTP?format=jsonP&prefix=Getdata&per_page=500&date=2006',
+      //'http://api.worldbank.org/countries?format=jsonP&prefix=Getdata',
+    //type: 'GET',
+    jsonpCallback: 'getdata',
+    dataType: 'jsonp',
+    success: function(data, textStatus, request) {
+      console.log(data);
+    }
+  }) 
   
   var world = topojson.feature(data, data.objects.world_data);
   
