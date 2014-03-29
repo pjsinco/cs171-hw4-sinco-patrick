@@ -39,11 +39,14 @@ var color = d3.scale.quantize()
   .range(['rgb(237,248,233)','rgb(186,228,179)','rgb(116,196,118)',
     'rgb(49,163,84)','rgb(0,109,44)']);
 
-d3.json('../data/world_data.json', function(error, data) {
+d3.json('../data/world_topo.json', function(error, data) {
+  console.log(data);
+  
+  var world = topojson.feature(data, data.objects.world_data);
   
   g
     .selectAll('.country')
-    .data(data.features)
+    .data(world.features)
     .enter()
       .append('path')
       .attr('class', 'country')
