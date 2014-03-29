@@ -25,7 +25,6 @@ var g = svg
 var color = d3.scale.quantize()
   .range(['rgb(237,248,233)','rgb(186,228,179)','rgb(116,196,118)',
     'rgb(49,163,84)','rgb(0,109,44)']);
-
   
 // define map projection
 var projection = d3.geo.mercator()
@@ -40,7 +39,9 @@ var color = d3.scale.quantize()
     'rgb(49,163,84)','rgb(0,109,44)']);
 
 d3.json('../data/world_topo.json', function(error, data) {
-  console.log(data);
+  data.objects.world_data.geometries.forEach(function(d) {
+    console.log(d.id); // grab the country id
+  });
   
   var world = topojson.feature(data, data.objects.world_data);
   
