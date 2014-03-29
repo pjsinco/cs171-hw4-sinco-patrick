@@ -96,33 +96,9 @@ d3.json('../data/wikipedia-iso-country-codes.json', function(iso) {
     console.log(years);
     
     $.ajax({
-      //url: 'http://api.worldbank.org/countries/indicators/NY.GDP.MKTP.CD?date=2006',
-      //url: 'http://api.worldbank.org/countries?format=jsonP&prefix=Getdata&per_page=500&date=2006',
-      url: 'http://api.worldbank.org/countries/all/indicators/NV.AGR.TOTL.ZS?format=jsonP&prefix=Getdata&per_page=500&date=' + years,
-      //url: 'http://api.worldbank.org/countries/indicators/NY.GDP.MKTP?format=jsonP&prefix=Getdata&per_page=500&date=2006',
-        //'http://api.worldbank.org/countries?format=jsonP&prefix=Getdata',
-      //type: 'GET',
+      url: 'http://api.worldbank.org/countries/all/indicators/EG.ELC.ACCS.ZS?format=jsonP&prefix=Getdata&per_page=500&date=' + years,
       jsonpCallback: 'getdata',
       dataType: 'jsonp',
-      //success: function(data, textStatus, request) {
-        //console.log(data);
-//        if (data.length > 1) { // if we got something back
-//          // add resulting values to world
-//          $.each(data[1], function(index, d) {
-//            //console.log(val);
-//            var iso2Id = d.country.id;
-//            for (var k = 0; k < world.features.length; k++) {
-//              var world2Id = world.features[k].iso2Id;
-//              if (iso2Id == world2Id) {
-//                world.features[k].value = 
-//                  (d.decimal) ? parseFloat(d.value) :
-//                    parseInt(d.value);
-//              };
-//            }
-//            //console.log(value);
-//          });
-//        }
-//      }
     }).done(function(result) {
       indicator = result[1][0].indicator.value;
       ajaxResult = result;
@@ -188,9 +164,6 @@ d3.json('../data/wikipedia-iso-country-codes.json', function(iso) {
       d3.select('#details h3')
         .text(indicator);
     }); // end .done()
-
-    //}) 
-  
         
   }); // end d3.json();
 }); // end d3.json();
