@@ -38,36 +38,58 @@ var color = d3.scale.quantize()
   .range(['rgb(237,248,233)','rgb(186,228,179)','rgb(116,196,118)',
     'rgb(49,163,84)','rgb(0,109,44)']);
 
-d3.json('../data/world_topo.json', function(error, data) {
-  data.objects.world_data.geometries.forEach(function(d) {
-    //console.log(d.id); // grab the country id
-  });
+d3.json('../data/wikipedia-iso-country-codes.json', function(iso) {
+  //console.log(iso);
 
-  function getData(response) {
-    console.log(response);
-  }
+  d3.json('../data/world_topo.json', function(worldMap) {
 
-  $.ajax({
-    //url: 'http://api.worldbank.org/countries/br/indicators/NY.GDP.MKTP.CD?date=2006',
-    url: 'http://api.worldbank.org/countries?format=jsonP&prefix=Getdata&per_page=500&date=2006',
-      //'http://api.worldbank.org/countries/indicators/NY.GDP.MKTP?format=jsonP&prefix=Getdata&per_page=500&date=2006',
-      //'http://api.worldbank.org/countries?format=jsonP&prefix=Getdata',
-    //type: 'GET',
-    jsonpCallback: 'getdata',
-    dataType: 'jsonp',
-    success: function(data, textStatus, request) {
-      console.log(data);
-    }
-  }) 
+    var world = topojson.feature(worldMap, worldMap.objects.world_data);
   
-  var world = topojson.feature(data, data.objects.world_data);
+    // add full country names to world
+    for (var i = 0; i < iso.length; i++) {
+      var iso3Id = iso[i]['Alpha-3 code'];
+      var iso2Id = iso[i]['Alpha-2 code'];
+      var isoFullName = iso[i]['English short name lower case'];
+      for (var k = 0; k < world.features.length; k++) {
+        var worldId = world.features[k].id;
+        
+        if (iso3Id == worldId) {
+          world.features[k].full_name = isoFullName;
+          break;
+        } // end if()
+      } // end for()
+    }; // end for()
+    
+    $.ajax({
+      //url: 'http://api.worldbank.org/countries/indicators/NY.GDP.MKTP.CD?date=2006',
+      //url: 'http://api.worldbank.org/countries?format=jsonP&prefix=Getdata&per_page=500&date=2006',
+      url: "http://api.worldbank.org/countries/all/indicators/EN.FSH.THRD.NO?format=jsonP&prefix=Getdata&per_page=500&date=2006",
+      //url: 'http://api.worldbank.org/countries/indicators/NY.GDP.MKTP?format=jsonP&prefix=Getdata&per_page=500&date=2006',
+        //'http://api.worldbank.org/countries?format=jsonP&prefix=Getdata',
+      //type: 'GET',
+      jsonpCallback: 'getdata',
+      dataType: 'jsonp',
+      success: function(data, textStatus, request) {
+        console.log(data);
+      }
+    }) 
   
-  g
-    .selectAll('.country')
-    .data(world.features)
-    .enter()
-      .append('path')
-      .attr('class', 'country')
-      .attr('d', path)
-
+    g
+      .selectAll('.country')
+      .data(world.features)
+      .enter()
+        .append('path')
+        //.classed('country', true)
+        .attr('class', function(d) {
+          return 'country ' + d.id; 
+        })
+        .attr('title', function(d) {
+          return d.full_name; 
+        })
+        .attr('d', path)
+        .style('fill', function(d) {
+          //console.log(d);
+        })
+        
+  }); // end d3.json();
 }); // end d3.json();
