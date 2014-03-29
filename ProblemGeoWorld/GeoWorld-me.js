@@ -9,9 +9,10 @@ var width = 960 - margin.left - margin.right;
 var height = 960 - margin.top - margin.bottom;
 var padding = 30;
 var ajaxResult = [];
+var years = '2009:2013';
 
 // set up main svg
-var svg = d3.select('body')
+var svg = d3.select('#main_vis')
   .append('svg')
   .attr('width', width + margin.left + margin.right)
   .attr('height', height + margin.top + margin.bottom);
@@ -25,7 +26,31 @@ var g = svg
 var color = d3.scale.quantize()
   .range(['rgb(237,248,233)','rgb(186,228,179)','rgb(116,196,118)',
     'rgb(49,163,84)','rgb(0,109,44)']);
+
+var legendColors = d3.scale.quantize()
+  .range(['rgb(237,248,233)','rgb(186,228,179)','rgb(116,196,118)',
+    'rgb(49,163,84)','rgb(0,109,44)']);
   
+var legend = d3.select('#legend')
+  .append('ul')
+  .attr('class', 'list-inline')
+  
+var formats = {
+    percent: d3.format('%')
+};
+
+var keys = legend.selectAll('li.key')
+  .data(legendColors.range())
+  .enter()
+    .append('li')
+    .attr('class', 'key')
+    .style('border-top-color', String)
+    .text(function(d) {
+      var r = legendColors.invertExtent(d);
+      return formats.percent(r[0]);
+    })
+    
+
 // define map projection
 var projection = d3.geo.mercator()
   .translate([width / 2, height / 2])
@@ -38,10 +63,17 @@ var color = d3.scale.quantize()
   .range(['rgb(237,248,233)','rgb(186,228,179)','rgb(116,196,118)',
     'rgb(49,163,84)','rgb(0,109,44)']);
 
+//$('button[type="submit"]')
+//  .click(function(event) {
+//    years = $('select').val()
+//  });
+
 d3.json('../data/wikipedia-iso-country-codes.json', function(iso) {
   //console.log(iso);
 
   d3.json('../data/world_topo.json', function(worldMap) {
+
+
     var indicator;
     var world = topojson.feature(worldMap, worldMap.objects.world_data);
   
@@ -60,11 +92,13 @@ d3.json('../data/wikipedia-iso-country-codes.json', function(iso) {
         } // end if()
       } // end for()
     }; // end for()
+  
+    console.log(years);
     
     $.ajax({
       //url: 'http://api.worldbank.org/countries/indicators/NY.GDP.MKTP.CD?date=2006',
       //url: 'http://api.worldbank.org/countries?format=jsonP&prefix=Getdata&per_page=500&date=2006',
-      url: "http://api.worldbank.org/countries/all/indicators/AG.LND.FRST.ZS?format=jsonP&prefix=Getdata&per_page=500&date=2006",
+      url: 'http://api.worldbank.org/countries/all/indicators/NV.AGR.TOTL.ZS?format=jsonP&prefix=Getdata&per_page=500&date=' + years,
       //url: 'http://api.worldbank.org/countries/indicators/NY.GDP.MKTP?format=jsonP&prefix=Getdata&per_page=500&date=2006',
         //'http://api.worldbank.org/countries?format=jsonP&prefix=Getdata',
       //type: 'GET',
@@ -90,6 +124,7 @@ d3.json('../data/wikipedia-iso-country-codes.json', function(iso) {
 //        }
 //      }
     }).done(function(result) {
+      indicator = result[1][0].indicator.value;
       ajaxResult = result;
       if (result.length > 1) { // if we got something back
         // add resulting values to world
@@ -135,7 +170,23 @@ d3.json('../data/wikipedia-iso-country-codes.json', function(iso) {
           .style('fill', function(d) {
             return color(d.value);
           })
+          .on('mouseover', function(d) {
+            console.log('mousing over');
+            d3.select('#details p#country')
+              .text(function() {
+                return d.fullName ;
+            })
+            d3.select('#details p#value')
+              .text(function() {
+                return d.value ;
+              })
+          })
 
+      d3.select('#details h1')
+        .text(years);
+
+      d3.select('#details h3')
+        .text(indicator);
     }); // end .done()
 
     //}) 

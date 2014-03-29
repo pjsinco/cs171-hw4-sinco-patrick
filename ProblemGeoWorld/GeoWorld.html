@@ -10,6 +10,15 @@
 <script type="text/javascript" src="../libs/colorbrewer.js"></script>
 
 <style type="text/css">
+  body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 100;
+  }
+
+  h1, h3 {
+    font-weight: 100;
+  }
+
   svg {
     background: #eeeeee;
   }
@@ -25,13 +34,65 @@
     font-weight: bold;
   }
 
+  #details {
+    position: absolute;
+    top: 0px;
+    left: 980px;
+  }
+
   table {
     border:none;
   }
+  
+  #vis {
+    position: relative;
+  }
+
+  #legend {
+    position: absolute;
+    top: 400px;
+
+    padding: 1.5em 0 0 1.5em;
+  }
+  
+  ul {
+    list-style: none;
+  }
+  li.key {
+    border-top-width: 15px;
+    border-top-style: solid;
+    font-size: .75em;
+    width: 50%;
+    padding-left: 0;
+    padding-right: 0;
+  }
 </style>
 </head>
-
 <body>
+  <div id="vis">
+    <div id="main_vis">
+    </div>
+    <div id="legend">
+    </div>
+    <div id="details">
+<!--      <form>
+        <select name="year_select">
+          <option value="1980:1983">1980-1983</option>
+          <option value="1984:1988">1984-1988</option>
+          <option value="1989:1993">1989-1993</option>
+          <option value="1994:1998">1994-1998</option>
+          <option value="1999:2003">1999-2003</option>
+          <option value="2004:2008">2004-2008</option>
+          <option value="2009:2013">2009-2013</option>
+        </select>
+        <button type="submit">Show</button>
+      </form> -->
+      <h1></h1>
+      <h3></h3>
+      <p id='country'></p>
+      <p id='value'></p>
+    </div>
+  </div>
 <script src="GeoWorld-me.js"></script>
 <!--<script src="GeoWorld.js"></script>-->
 </body>
